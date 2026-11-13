@@ -3,7 +3,7 @@ import Site from '../../layouts/Site.astro';
 import { getPosts, sectionNames } from '../../lib/posts';
 import { render } from 'astro:content';
 export async function getStaticPaths(){
- const posts=await getPosts();
+ const posts=await getPosts({ includeDrafts: true });
  return posts.map(post=>({params:{slug:post.id},props:{post}}));
 }
 const {post}=Astro.props;
@@ -12,7 +12,7 @@ const formatter=new Intl.DateTimeFormat(post.data.language==='zh'?'zh-CN':'en-US
 ---
 <Site title={`${post.data.title} · 不器`} description={post.data.description}>
 <article class:list={['article',post.data.section]}>
- <div class="article-top"><a class="back" href={`${import.meta.env.BASE_URL}writing/`}>← 返回文章</a><span class="eyebrow">{sectionNames[post.data.section]}</span></div>
+ <div class="article-top"><a class="back" href={`${import.meta.env.BASE_URL}writing/`}>← 返回文章</a><span class="eyebrow">{sectionNames[post.data.section]}{post.data.status === 'draft' && ' · 草稿'}</span></div>
  <header class="article-head"><h1>{post.data.title}</h1><p class="dek">{post.data.description}</p><p class="byline">{formatter.format(post.data.date)} <span>·</span> {post.data.tags.join(' / ')}</p></header>
  <div class="article-grid"><div class="prose"><Content /></div>{post.data.section==='engineering' && headings.length>0 && <aside class="toc"><strong>本文目录</strong>{headings.filter(h=>h.depth<=3).map(h=><a class:list={[{'sub':h.depth===3}]} href={`#${h.slug}`}>{h.text}</a>)}</aside>}</div>
  <div class="article-end"><a href={`${import.meta.env.BASE_URL}writing/`}>← 返回全部文章</a></div>
