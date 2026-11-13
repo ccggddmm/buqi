@@ -1,0 +1,37 @@
+---
+title: "Evaluating Multi-Turn Agents: A Working Note"
+description: "A short example of how technical research and mathematical notation appear on this site."
+date: 2026-11-10
+section: engineering
+language: en
+status: published
+featured: true
+tags: [LLM Evaluation, Agents]
+---
+
+*Sample post — replace this with your own writing before publishing.*
+
+## The evaluation problem
+
+Multi-turn agent evaluation asks how an interactive system behaves over an extended conversation, not merely how well it answers a single prompt.
+
+## Aggregating outcomes
+
+A simple illustrative aggregate is:
+
+$$
+R = \frac{1}{T}\sum_{t=1}^{T} r_t
+$$
+
+But this mean may overlook critical errors, compounding state, or tasks with different numbers of turns.
+
+## Questions worth exploring
+
+- Can per-turn metrics be compared across tasks of different lengths?
+- How stable is a simulated user?
+- What evidence should a rubric-based judge receive?
+
+```python
+def mean_turn_reward(rewards):
+    return sum(rewards) / len(rewards)
+```
