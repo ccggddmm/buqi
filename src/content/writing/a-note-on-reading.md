@@ -4,7 +4,7 @@ description: "一些有关语言、存在和表达欲望的问题，留待继续
 date: 2026-11-08
 section: notes
 language: zh
-status: published
+status: draft
 featured: true
 tags: [文学, 哲学]
 ---
