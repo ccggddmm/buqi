@@ -3,3 +3,5 @@ dist/
 .astro/
 .DS_Store
 .env*
+/src/content/writing/*.draft.md
+/src/content/writing/*.draft.mdx
