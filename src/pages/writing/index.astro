@@ -1,14 +1,14 @@
 ---
 import Site from '../../layouts/Site.astro';
 import { getPosts, sectionNames, postHref } from '../../lib/posts';
-const posts = await getPosts();
+const posts = await getPosts({ includeDrafts: true });
 const sections = ['all','engineering','essays','notes'] as const;
 const labels = {all:'全部', ...sectionNames};
 ---
 <Site title="Writing · 不器">
 <section class="head"><p class="eyebrow">WRITING / 文字</p><h1>文字与思考</h1><p>关于人工智能、文学、哲学，以及那些仍在形成中的问题。</p></section>
 <div class="filters" aria-label="文章分类">{sections.map((s)=><button data-filter={s} class:list={['filter',{selected:s==='all'}]}>{labels[s]}</button>)}</div>
-<ul class="article-list">{posts.map(p=><li class="article-item" data-section={p.data.section}><div><span class="tag">{sectionNames[p.data.section]}</span><h2 class="article-title"><a href={postHref(p.id)}>{p.data.title}</a></h2><p>{p.data.description}</p><div class="tags">{p.data.tags.map(t=><span class="pill">#{t}</span>)}</div></div><time class="article-date">{p.data.date.toISOString().slice(0,10)}</time></li>)}</ul>
+<ul class="article-list">{posts.map(p=><li class="article-item" data-section={p.data.section}><div><span class="tag">{sectionNames[p.data.section]}{p.data.status === 'draft' && ' · 草稿'}</span><h2 class="article-title"><a href={postHref(p.id)}>{p.data.title}</a></h2><p>{p.data.description}</p><div class="tags">{p.data.tags.map(t=><span class="pill">#{t}</span>)}</div></div><time class="article-date">{p.data.date.toISOString().slice(0,10)}</time></li>)}</ul>
 <script>
 const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
 buttons.forEach(button => button.addEventListener('click', () => {
