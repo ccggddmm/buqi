@@ -1,0 +1,27 @@
+---
+import Site from '../layouts/Site.astro';
+import {getPosts, sectionNames, postHref} from '../lib/posts';
+const posts = await getPosts();
+const featured = posts.filter(p=>p.data.featured).slice(0,3);
+const shown = featured.length ? featured : posts.slice(0,3);
+---
+<Site>
+<section class="hero">
+ <div class="vertical-line" aria-hidden="true"></div>
+ <p class="eyebrow">PERSONAL JOURNAL · 个人写作</p>
+ <h1>不<span class="space"> </span>器<span class="dot">。</span></h1>
+ <p class="hero-quote">君子不器。<span>——《论语·为政》</span></p>
+ <div class="hero-intro">
+  <p>在人工智能的时代，思考技术，也思考技术之外的人与世界。</p>
+  <p class="hero-english">On intelligence, humanity, and everything in between.</p>
+ </div>
+</section>
+<section class="featured">
+ <div class="heading-row"><div><p class="eyebrow">SELECTED WRITING</p><h2 class="section-heading">近日所思<span class="small-red"> / Selected Notes</span></h2></div><a href={`${import.meta.env.BASE_URL}writing/`} class="all">全部文章 ↗</a></div>
+ <ul class="article-list">{shown.map(post=><li class="article-item"><div><span class="tag">{sectionNames[post.data.section]}</span><h3 class="article-title"><a href={postHref(post.id)}>{post.data.title}</a></h3><p>{post.data.description}</p></div><time class="article-date">{post.data.date.toISOString().slice(0,10)}</time></li>)}</ul>
+</section>
+<section class="manifesto"><div class="rule"></div><p>人不应被单一的技艺所定义。<br/>在创造工具的同时，<br/>也持续追问人的价值、自由与可能。</p><span>— 不器 / A NOTE TO MYSELF</span></section>
+</Site>
+<style>
+.hero{position:relative;padding:88px 0 86px;border-bottom:1px solid var(--border)}.vertical-line{position:absolute;right:0;top:87px;height:176px;border-right:1px solid var(--border)}.hero h1{font:500 clamp(84px,14vw,148px)/1.25 'Noto Serif SC',serif;letter-spacing:.04em;margin:30px 0 18px}.space{display:inline-block;width:.2em}.dot{color:var(--red);font-size:.5em;vertical-align:middle}.hero-quote{font:19px var(--serif);letter-spacing:.1em;margin:0}.hero-quote span{font:12px var(--sans);color:var(--secondary);letter-spacing:0;margin-left:9px}.hero-intro{margin-top:71px;font-family:'Noto Serif SC',serif;font-size:18px;line-height:2.1}.hero-intro p{margin:0}.hero-intro .hero-english{font-family:var(--serif);font-size:17px;color:var(--secondary);font-style:italic;margin-top:5px}.featured{padding:69px 0 94px}.heading-row{display:flex;justify-content:space-between;align-items:end;margin-bottom:38px}.heading-row .eyebrow{margin:0 0 15px}.section-heading{margin:0}.small-red{font:italic 18px var(--serif);color:var(--secondary)}.all{font-size:12px;color:var(--secondary);padding-bottom:5px}.manifesto{padding:0 0 120px;display:grid;grid-template-columns:1fr 1.1fr;gap:42px}.rule{border-top:1px solid var(--red);margin-top:19px;width:30px}.manifesto p{font:20px/2.25 'Noto Serif SC',serif;grid-column:2;margin:0}.manifesto span{grid-column:2;font:10px var(--sans);letter-spacing:.14em;color:var(--secondary);margin-top:-20px}@media(max-width:680px){.hero{padding:65px 0 70px}.vertical-line{display:none}.hero h1{margin:22px 0}.hero-intro{margin-top:52px;font-size:15px}.hero-intro .hero-english{font-size:14px}.featured{padding:55px 0 70px}.section-heading{font-size:27px}.small-red{display:none}.manifesto{display:block;padding-bottom:70px}.manifesto p{font-size:17px;margin:15px 0}.manifesto span{font-size:9px}}
+</style>
