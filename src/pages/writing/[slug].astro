@@ -1,0 +1,24 @@
+---
+import Site from '../../layouts/Site.astro';
+import { getPosts, sectionNames } from '../../lib/posts';
+import { render } from 'astro:content';
+export async function getStaticPaths(){
+ const posts=await getPosts();
+ return posts.map(post=>({params:{slug:post.id},props:{post}}));
+}
+const {post}=Astro.props;
+const {Content,headings}=await render(post);
+const formatter=new Intl.DateTimeFormat(post.data.language==='zh'?'zh-CN':'en-US',{year:'numeric',month:'long',day:'numeric'});
+---
+<Site title={`${post.data.title} · 不器`} description={post.data.description}>
+<article class:list={['article',post.data.section]}>
+ <div class="article-top"><a class="back" href={`${import.meta.env.BASE_URL}writing/`}>← 返回文章</a><span class="eyebrow">{sectionNames[post.data.section]}</span></div>
+ <header class="article-head"><h1>{post.data.title}</h1><p class="dek">{post.data.description}</p><p class="byline">{formatter.format(post.data.date)} <span>·</span> {post.data.tags.join(' / ')}</p></header>
+ <div class="article-grid"><div class="prose"><Content /></div>{post.data.section==='engineering' && headings.length>0 && <aside class="toc"><strong>本文目录</strong>{headings.filter(h=>h.depth<=3).map(h=><a class:list={[{'sub':h.depth===3}]} href={`#${h.slug}`}>{h.text}</a>)}</aside>}</div>
+ <div class="article-end"><a href={`${import.meta.env.BASE_URL}writing/`}>← 返回全部文章</a></div>
+</article>
+</Site>
+<style is:global>
+.article{padding-bottom:50px}.article-top{display:flex;justify-content:space-between;max-width:900px;margin:55px auto 0}.article-top .back{color:var(--secondary);font-size:12px}.article-head{text-align:center;max-width:850px;margin:80px auto 70px}.article-head h1{font:400 clamp(35px,5vw,61px)/1.35 var(--serif);margin:15px 0 18px}.article-head .dek{font:17px/1.9 var(--serif);color:var(--secondary)}.byline{font:12px var(--sans);color:var(--secondary);margin-top:35px}.byline span{margin:0 8px}.article-grid{display:flex;gap:52px;align-items:flex-start;justify-content:center;position:relative}.prose{width:100%;max-width:710px;min-width:0;font:17px/2.1 'Noto Serif SC',var(--serif);letter-spacing:.01em}.engineering .prose{font:16px/1.95 var(--sans);max-width:770px}.prose h2,.prose h3,.prose h4{font-family:var(--serif);font-weight:500;line-height:1.4;scroll-margin-top:35px}.prose h2{font-size:30px;margin:55px 0 22px}.prose h3{font-size:23px;margin:38px 0 17px}.prose p{margin:0 0 24px}.prose a{text-decoration:underline;text-decoration-color:#c8b8ad;text-underline-offset:4px}.prose blockquote{border-left:2px solid var(--red);padding:6px 0 6px 23px;margin:32px 0;color:#63665e;font-style:italic}.prose pre{padding:20px;border:1px solid var(--border);border-radius:3px;overflow-x:auto;font-size:13px;line-height:1.55;background:#eeeee8!important}.prose code:not(pre code){font:0.89em ui-monospace,monospace;background:#ebeae1;padding:2px 5px;border-radius:3px}.prose img{max-width:100%;height:auto}.prose ul,.prose ol{padding-left:27px}.prose li{margin-bottom:9px}.prose hr{border:0;border-top:1px solid var(--border);margin:40px 0}.toc{width:165px;flex:none;position:sticky;top:30px;font:12px/1.6 var(--sans);border-left:1px solid var(--border);padding-left:16px}.toc strong{font-size:11px;letter-spacing:.08em;color:var(--secondary);display:block;margin-bottom:16px}.toc a{display:block;color:var(--secondary);margin:0 0 13px}.toc a.sub{padding-left:12px}.article-end{margin:75px auto 35px;max-width:710px;padding-top:27px;border-top:1px solid var(--border);font-size:12px;color:var(--secondary)}.katex-display{overflow-x:auto;overflow-y:hidden;padding:8px 0}
+@media(max-width:1010px){.toc{display:none}}@media(max-width:680px){.article-top{margin-top:36px}.article-head{margin:60px auto 47px}.article-head .dek{font-size:15px}.prose{font-size:15px;line-height:2.1}.engineering .prose{font-size:15px}.prose h2{font-size:25px}.article-head h1{font-size:34px}}
+</style>
