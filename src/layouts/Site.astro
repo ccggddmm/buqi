@@ -3,6 +3,7 @@ interface Props { title?: string; description?: string; }
 const { title = '不器 · BUQI', description = '思考技术，也思考技术之外的人与世界。' } = Astro.props;
 const current = Astro.url.pathname;
 const base = import.meta.env.BASE_URL;
+const analyticsSite = import.meta.env.PUBLIC_GOATCOUNTER_SITE?.trim();
 ---
 <!doctype html>
 <html lang="zh-CN">
@@ -17,6 +18,9 @@ const base = import.meta.env.BASE_URL;
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet" />
 <title>{title}</title>
+{import.meta.env.PROD && analyticsSite && /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(analyticsSite) && (
+  <script is:inline async src="https://gc.zgo.at/count.js" data-goatcounter={`https://${analyticsSite}.goatcounter.com/count`}></script>
+)}
 </head>
 <body>
 <div class="frame">
@@ -24,7 +28,6 @@ const base = import.meta.env.BASE_URL;
   <a class="brand" href={base} aria-label="不器 · 首页">不器<span class="brand-roman">BU QI</span></a>
   <nav aria-label="主导航">
     <a class:list={[{'active': current.startsWith(`${base}writing`)}]} href={`${base}writing/`}>Writing</a>
-    <a class:list={[{'active': current.startsWith(`${base}research`)}]} href={`${base}research/`}>Research</a>
     <a class:list={[{'active': current.startsWith(`${base}about`)}]} href={`${base}about/`}>About</a>
   </nav>
 </header>
